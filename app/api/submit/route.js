@@ -53,7 +53,7 @@ export async function POST(req) {
     const redirectUrl =
       score >= 18
         ? "https://www.syncskills.ai/ready-to-buy-lead"
-        : "https://www.syncskills.ai/need-nurture-lead";
+        : "https://www.syncskills.ai/need-nuture-lead";
 
     return new Response(
       JSON.stringify({ redirect: redirectUrl }),
