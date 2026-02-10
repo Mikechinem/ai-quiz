@@ -15,12 +15,16 @@ export default function LeadForm({
   );
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value || "" });
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    const safeFormData = fields.reduce(
+      (acc, f) => ({ ...acc, [f.name]: formData[f.name] || "" }),
+      {}
+    );
+    onSubmit(safeFormData);
   };
 
   return (

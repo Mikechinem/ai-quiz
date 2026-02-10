@@ -12,28 +12,24 @@ export default function QuizPage() {
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Called when user selects an answer
-  const handleAnswer = (value) => {
+  const handleOptionClick = (value) => {
     setScore(score + value);
     setStep(step + 1);
   };
 
-  // Called when form is submitted
   const handleSubmit = async (formData) => {
     setLoading(true);
-    const { name, email, phone } = formData;
 
     try {
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, score }),
+        body: JSON.stringify({ ...formData, score }),
       });
 
       const data = await res.json();
 
       if (data.redirect) {
-        // Small delay to show "calculating" animation
         setTimeout(() => {
           window.location.href = data.redirect;
         }, 2000);
@@ -48,22 +44,18 @@ export default function QuizPage() {
     }
   };
 
-  // Show loading screen while submitting
   if (loading) return <LoadingScreen score={score} />;
 
-  // Show question card if there are still steps left
-  if (step < questions.length) {
-    const currentQuestion = questions[step];
-    if (!currentQuestion) return null; // Safety check
-
+  if (step < questions.length)
     return (
       <div className="min-h-screen bg-black flex flex-col justify-center items-center p-4">
-        <QuestionCard question={currentQuestion} onAnswer={handleAnswer} />
-        <ProgressBar step={step + 1} total={questions.length} />
+        <QuestionCard
+          question={questions[step]}
+          onAnswer={handleOptionClick}
+        />
+        <ProgressBar step={step} total={questions.length} />
       </div>
     );
-  }
 
-  // Show lead form when all questions are answered
   return <LeadForm onSubmit={handleSubmit} />;
 }
