@@ -7,7 +7,14 @@ mailchimp.setConfig({
 });
 
 export async function POST(req) {
-  try {
+
+  console.log('All env vars:', {
+      hasApiKey: !!process.env.MAILCHIMP_API_KEY,
+      hasServer: !!process.env.MAILCHIMP_SERVER,
+      serverValue: process.env.MAILCHIMP_SERVER
+    });
+  
+    try {
     const { name, email, phone, score } = await req.json();
 
     if (!email || !name) {
