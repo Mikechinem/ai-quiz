@@ -1,5 +1,5 @@
+"use client";
 import { useState } from "react";
-
 export default function LeadForm({
   onSubmit,
   fields = [
@@ -13,6 +13,8 @@ export default function LeadForm({
   const [formData, setFormData] = useState(
     fields.reduce((acc, f) => ({ ...acc, [f.name]: "" }), {})
   );
+
+  const [consent, setConsent] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value || "" });
@@ -54,13 +56,32 @@ export default function LeadForm({
           />
         ))}
 
-        <button
-          type="submit"
-          style={{ backgroundColor: theme.accent }}
-          className="w-full text-black py-3 rounded hover:opacity-90 transition"
-        >
-          {buttonText}
-        </button>
+         <div className="text-left text-sm mt-2" style={{ color: theme.text }}>
+    <label className="flex items-start gap-2 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={consent}
+      onChange={(e) => setConsent(e.target.checked)}
+      required
+      className="mt-1"
+    />
+    <span>
+      I agree to receive emails, training updates, and promotional messages from
+      <strong> SyncSkills</strong>. I understand I can unsubscribe at any time.
+    </span>
+  </label>
+</div>
+
+
+       <button
+  type="submit"
+  disabled={!consent}
+  style={{ backgroundColor: theme.accent, opacity: consent ? 1 : 0.6 }}
+  className="w-full text-black py-3 rounded hover:opacity-90 transition"
+>
+  {buttonText}
+</button>
+
       </form>
     </div>
   );
