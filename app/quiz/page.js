@@ -1,5 +1,6 @@
 "use client";
 
+import { trackEvent } from "@/lib/metaPixel";
 import { useState } from "react";
 import { questions } from "@/data/questions";
 import QuestionCard from "@/components/QuestionCard";
@@ -27,16 +28,20 @@ export default function QuizPage() {
         body: JSON.stringify({ ...formData, score }),
       });
 
-      const data = await res.json();
+      const eventID = formData.email;
+      trackEvent("Lead", { score }, eventID);
 
-      if (data.redirect) {
-        setTimeout(() => {
-          window.location.href = data.redirect;
-        }, 2000);
-      } else {
-        alert("Something went wrong. Please try again.");
-        setLoading(false);
-      }
+
+      // Wait 2 seconds before following the server redirect
+      setTimeout(() => {
+        if (res.redirected) {
+          window.location.href = res.url; // server-side redirect URL
+        } else {
+          alert("Something went wrong. Please try again.");
+          setLoading(false);
+        }
+      }, 1000);
+
     } catch (err) {
       console.error(err);
       alert("Error submitting form");

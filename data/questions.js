@@ -1,75 +1,84 @@
 // data/questions.js
 export const questions = [
   {
-    text: "1. How familiar are you with AI tools?",
+    text: "1. Your current situation?",
     options: [
-      { label: "Very familiar", score: 3 },
-      { label: "Somewhat familiar", score: 2 },
-      { label: "Heard of them but never used", score: 1 },
-      { label: "Not at all", score: 0 },
+      { label: "Employed full-time", score: 3 },
+      { label: "Employed part-time", score: 2 },
+      { label: "Self-employed", score: 1 },
+      { label: "Between jobs", score: 0 },
     ],
   },
   {
-    text: "2. How much time can you dedicate weekly to AI side hustles?",
+    text: "2. How do you feel about your income?",
     options: [
-      { label: "10+ hours", score: 3 },
-      { label: "5–10 hours", score: 2 },
-      { label: "2–5 hours", score: 1 },
-      { label: "<2 hours", score: 0 },
+      { label: "Comfortable", score: 3 },
+      { label: "Could be better", score: 2 },
+      { label: "Not enough", score: 1 },
+      { label: "Stressed about it", score: 0 },
     ],
   },
   {
-    text: "3. What is your main goal with AI skills?",
+    text: "3. Why do you want extra income?",
     options: [
-      { label: "Start earning immediately", score: 3 },
-      { label: "Learn and experiment", score: 2 },
-      { label: "Explore opportunities", score: 1 },
+      { label: "Reduce pressure", score: 3 },
+      { label: "Support family", score: 2 },
+      { label: "Invest/save more", score: 1 },
+      { label: "Gain freedom", score: 0 },
+    ],
+  },
+  {
+    text: "4. Have you tried side income before?",
+    options: [
+      { label: "Yes, worked", score: 3 },
+      { label: "Yes, failed", score: 2 },
+      { label: "Tried but inconsistent", score: 1 },
+      { label: "Never tried", score: 0 },
+    ],
+  },
+  {
+    text: "5. Your AI experience level?",
+    options: [
+      { label: "Use it daily", score: 3 },
+      { label: "Sometimes", score: 2 },
+      { label: "Just testing", score: 1 },
+      { label: "Beginner", score: 0 },
+    ],
+  },
+  {
+    text: "6. Your main goal with AI?",
+    options: [
+      { label: "Perform better at work", score: 3 },
+      { label: "Start side income", score: 2 },
+      { label: "Build long-term business", score: 1 },
+      { label: "Need clarity", score: 0 },
+    ],
+  },
+  {
+    text: "7. Time you can commit weekly?",
+    options: [
+      { label: "1–3 hrs", score: 0 },
+      { label: "3–5 hrs", score: 1 },
+      { label: "5–10 hrs", score: 2 },
+      { label: "10+ hrs", score: 3 },
+    ],
+  },
+  {
+    text: "8. How serious are you?",
+    options: [
       { label: "Just curious", score: 0 },
+      { label: "Interested", score: 1 },
+      { label: "Ready to act", score: 2 },
+      { label: "Fully committed", score: 3 },
     ],
   },
   {
-    text: "4. Have you sold services or products online before?",
+    text: "9. Ready to invest in yourself?",
     options: [
-      { label: "Yes, regularly", score: 3 },
-      { label: "Occasionally", score: 2 },
-      { label: "Once or twice", score: 1 },
-      { label: "Never", score: 0 },
-    ],
-  },
-  {
-    text: "5. How confident are you in learning new digital tools?",
-    options: [
-      { label: "Very confident", score: 3 },
-      { label: "Somewhat confident", score: 2 },
-      { label: "A little unsure", score: 1 },
-      { label: "Not confident", score: 0 },
-    ],
-  },
-  {
-    text: "6. Can you invest in yourself financially for results?",
-    options: [
-      { label: "Yes, immediately", score: 3 },
-      { label: "Maybe a small amount", score: 2 },
-      { label: "Only later", score: 1 },
-      { label: "No", score: 0 },
-    ],
-  },
-  {
-    text: "7. Do you prefer guidance or learning independently?",
-    options: [
-      { label: "Guided step-by-step", score: 3 },
-      { label: "Mostly guided", score: 2 },
-      { label: "Some guidance", score: 1 },
-      { label: "Completely independent", score: 0 },
-    ],
-  },
-  {
-    text: "8. How soon do you want to start earning with AI?",
-    options: [
-      { label: "Immediately", score: 3 },
-      { label: "Within a month", score: 2 },
-      { label: "Within 3 months", score: 1 },
-      { label: "Just exploring", score: 0 },
+      { label: "Yes", score: 3 },
+      { label: "Maybe", score: 2 },
+      { label: "Need options", score: 1 },
+      { label: "Not now", score: 0 },
     ],
   },
 ];
