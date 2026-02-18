@@ -19,36 +19,36 @@ export default function QuizPage() {
   };
 
   const handleSubmit = async (formData) => {
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const res = await fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, score }),
-      });
+  try {
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...formData, score }),
+    });
 
+    const data = await res.json();
+
+    if (data.success) {
       const eventID = formData.email;
       trackEvent("Lead", { score }, eventID);
 
-
-      // Wait 2 seconds before following the server redirect
+      // Wait 1 second then redirect
       setTimeout(() => {
-        if (res.redirected) {
-          window.location.href = res.url; // server-side redirect URL
-        } else {
-          alert("Something went wrong. Please try again.");
-          setLoading(false);
-        }
+        window.location.href = data.redirectPath;
       }, 1000);
-
-    } catch (err) {
-      console.error(err);
-      alert("Error submitting form");
+    } else {
+      alert(data.error || "Something went wrong. Please try again.");
       setLoading(false);
     }
-  };
 
+  } catch (err) {
+    console.error(err);
+    alert("Error submitting form");
+    setLoading(false);
+  }
+};
   if (loading) return <LoadingScreen score={score} />;
 
   if (step < questions.length)

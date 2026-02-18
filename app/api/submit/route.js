@@ -1,6 +1,4 @@
 import mailchimp from "@mailchimp/mailchimp_marketing";
-import { sendCapiEvent } from "@/lib/metaCapi";
-
 import { NextResponse } from "next/server";
 
 // Configure Mailchimp
@@ -10,7 +8,6 @@ mailchimp.setConfig({
 });
 
 export async function POST(req) {
-
   console.log('All env vars:', {
     hasApiKey: !!process.env.MAILCHIMP_API_KEY,
     hasServer: !!process.env.MAILCHIMP_SERVER,
@@ -21,9 +18,9 @@ export async function POST(req) {
     const { name, email, phone, score } = await req.json();
 
     if (!email || !name) {
-      return new Response(
-        JSON.stringify({ error: "Name and email are required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+      return NextResponse.json(
+        { error: "Name and email are required" },
+        { status: 400 }
       );
     }
 
@@ -46,31 +43,48 @@ export async function POST(req) {
       }
     );
 
-    // 🔥 CAPI EVENT (server-side Meta tracking)
-    const eventID = email; // same ID should be used in Pixel for deduplication
+    // CAPI EVENT (server-side Meta tracking) - call Facebook directly
+    const eventID = `${email}-${Date.now()}`;
+    const pixelId = process.env.FB_PIXEL_ID;
+    const accessToken = process.env.FB_ACCESS_TOKEN;
 
-    await sendCapiEvent({
-      eventName: "Lead",
-      email,
-      phone,
-      eventID,
-      customData: { score },
-    });
+    await fetch(
+      `https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: [
+            {
+              event_name: "Lead",
+              event_time: Math.floor(Date.now() / 1000),
+              action_source: "website",
+              event_id: eventID,
+              user_data: {
+                em: [email],
+                ph: phone ? [phone] : [],
+              },
+              custom_data: { score, tag },
+            },
+          ],
+        }),
+      }
+    );
     
-    // 🔥 Server-side redirect
-    const redirectPath =
-      score >= 18
-        ? "/ready-to-buy-lead"
-        : "/need-nurture-lead";
+    // Return redirect path to client
+    const redirectPath = score >= 18 ? "/ready-to-buy-lead" : "/need-nurture-lead";
 
-    return NextResponse.redirect(new URL(redirectPath, req.url));
+    return NextResponse.json({ 
+      success: true, 
+      redirectPath 
+    });
 
   } catch (err) {
     console.error("Mailchimp API error:", err);
 
-    return new Response(
-      JSON.stringify({ error: "Server error or Mailchimp submission failed" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+    return NextResponse.json(
+      { error: "Server error or Mailchimp submission failed", details: err.message },
+      { status: 500 }
     );
   }
 }
