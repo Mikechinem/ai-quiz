@@ -73,12 +73,11 @@ export const questions = [
     ],
   },
   {
-    text: "9. Ready to invest in yourself?",
+    text: "9. If you were shown a proven system to earn $3k–$10k per month using simple AI tools, how much would you be willing to invest to get started?",
     options: [
-      { label: "Yes", score: 3 },
-      { label: "Maybe", score: 2 },
-      { label: "Need options", score: 1 },
-      { label: "Not now", score: 0 },
+      { label: "$1000 -$6000", score: 3 },
+      { label: "$500-$1000", score: 3 },
+      { label: "Interested, but not ready to commit", score: 0 },
     ],
   },
 ];
