@@ -1,13 +1,13 @@
 export default function QuestionCard({ question, onAnswer }) {
   return (
-    <div className="text-center text-white">
-      <h2 className="text-2xl mb-8">{question.text}</h2>
-      <div className="space-y-4">
+    <div className="text-center w-full max-w-xl">
+      <h2 className="text-black text-2xl font-extrabold mb-8 leading-snug">{question.text}</h2>
+      <div className="space-y-3">
         {question.options.map((opt, i) => (
           <button
             key={i}
             onClick={() => onAnswer(opt.score)}
-            className="w-full border border-white py-3 rounded-lg hover:bg-[#98de9d] hover:text-black transition"
+            className="w-full bg-white border border-gray-200 text-black py-3 px-5 rounded-xl hover:bg-[#2814de] hover:text-white hover:border-[#2814de] transition-all duration-200 font-medium shadow-sm text-left"
           >
             {opt.label}
           </button>

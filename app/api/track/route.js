@@ -4,6 +4,10 @@ export async function POST(req) {
   try {
     const { eventName, email, phone, eventID, customData } = await req.json();
 
+    if (!eventName) {
+  return NextResponse.json({ success: false, error: "eventName is required" }, { status: 400 });
+}
+
     const pixelId = process.env.FB_PIXEL_ID;
     const accessToken = process.env.FB_ACCESS_TOKEN;
 

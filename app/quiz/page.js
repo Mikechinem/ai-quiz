@@ -19,41 +19,36 @@ export default function QuizPage() {
   };
 
   const handleSubmit = async (formData) => {
-  setLoading(true);
-
-  try {
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...formData, score }),
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      const eventID = formData.email;
-      trackEvent("Lead", { score }, eventID);
-
-      // Wait 1 second then redirect
-      setTimeout(() => {
-        window.location.href = data.redirectPath;
-      }, 1000);
-    } else {
-      alert(data.error || "Something went wrong. Please try again.");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, score }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        const eventID = formData.email;
+        trackEvent("Lead", { score }, eventID);
+        setTimeout(() => {
+          window.location.href = data.redirectPath;
+        }, 1000);
+      } else {
+        alert(data.error || "Something went wrong. Please try again.");
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error submitting form");
       setLoading(false);
     }
+  };
 
-  } catch (err) {
-    console.error(err);
-    alert("Error submitting form");
-    setLoading(false);
-  }
-};
   if (loading) return <LoadingScreen score={score} />;
 
   if (step < questions.length)
     return (
-      <div className="min-h-screen bg-black flex flex-col justify-center items-center p-4">
+      <div className="min-h-screen bg-[#eae9f7] flex flex-col justify-center items-center p-4">
         <QuestionCard
           question={questions[step]}
           onAnswer={handleOptionClick}

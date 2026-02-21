@@ -1,20 +1,25 @@
 export default function LoadingScreen({ score }) {
   return (
-    <div className="min-h-screen bg-black flex flex-col justify-center items-center text-center">
-      <h2 className="text-2xl mb-4 text-white">
-        Calculating your AI Income Profile...
-      </h2>
-      <p className="text-[#98de9d] text-xl">
-        Your current score: <span className="font-bold">{score} / 24</span>
-      </p>
-      <div className="flex justify-center space-x-2 mt-4">
-        <span className="dot bg-[#98de9d] w-4 h-4 rounded-full animate-bounce"></span>
-        <span className="dot bg-[#98de9d] w-4 h-4 rounded-full animate-bounce animation-delay-200"></span>
-        <span className="dot bg-[#98de9d] w-4 h-4 rounded-full animate-bounce animation-delay-400"></span>
+    <div className="min-h-screen bg-[#eae9f7] flex flex-col justify-center items-center text-center px-4">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-10 max-w-md w-full">
+        <p className="text-[#2814de] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          Processing
+        </p>
+        <h2 className="text-black text-2xl font-extrabold mb-2">
+          Calculating your AI Income Profile...
+        </h2>
+        <p className="text-[#2814de] text-lg font-bold mb-6">
+          Your score: <span className="font-extrabold">{score} / 24</span>
+        </p>
+        <div className="flex justify-center space-x-2 mb-6">
+          <span className="w-4 h-4 rounded-full bg-[#2814de] animate-bounce"></span>
+          <span className="w-4 h-4 rounded-full bg-[#2814de] animate-bounce animation-delay-200"></span>
+          <span className="w-4 h-4 rounded-full bg-[#2814de] animate-bounce animation-delay-400"></span>
+        </div>
+        <p className="text-gray-400 text-sm">
+          Analyzing your answers to match you with the best AI side hustle path…
+        </p>
       </div>
-      <p className="text-gray-400 mt-4">
-        Analyzing your answers to match you with the best AI side hustle path…
-      </p>
     </div>
   );
 }

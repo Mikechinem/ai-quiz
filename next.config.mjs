@@ -4,7 +4,7 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ["res.cloudinary.com"], // allow Cloudinary images
+    domains: ['www.syncskills.com.au'], // syncskill images from payload
   },
 };
 

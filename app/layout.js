@@ -24,9 +24,9 @@ export default function RootLayout({ children }) {
         <MetaPixel />
 
         {/* Navbar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-start px-6 py-4 border-b border-white/5 bg-gray-900 backdrop-blur-sm">
-          <span className="text-white text-lg md:text-xl font-extrabold tracking-tight">
-            Sync<span className="text-[#98de9d]">Skills</span>
+        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-start px-6 py-4 border-b border-gray-200 bg-[#eae9f7]/90 backdrop-blur-sm">
+          <span className="text-[#ef4444] text-lg md:text-xl font-extrabold tracking-tight">
+            Sync<span className="text-[#2814de]">Skills</span>
           </span>
         </nav>
 
