@@ -75,7 +75,7 @@ export default function ReadyToBuyPage() {
       </p>
 
       <h1 className="text-black text-3xl md:text-5xl font-extrabold leading-tight tracking-tight max-w-3xl mb-4">
-        You rock 🔥. 100 steps ahead of most people —{" "}
+        You rock 🔥 <br/>100+ steps ahead of most people —{" "}
         <span className="text-[#2814de]">let's unlock your dream life</span>
       </h1>
 
