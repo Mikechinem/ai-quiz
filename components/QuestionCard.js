@@ -6,7 +6,7 @@ export default function QuestionCard({ question, onAnswer }) {
         {question.options.map((opt, i) => (
           <button
             key={i}
-            onClick={() => onAnswer(opt.score)}
+            onClick={() => onAnswer(opt.score, opt.label)}
             className="w-full bg-white border border-gray-200 text-black py-3 px-5 rounded-xl hover:bg-[#2814de] hover:text-white hover:border-[#2814de] transition-all duration-200 font-medium shadow-sm text-left"
           >
             {opt.label}

@@ -11,25 +11,36 @@ import LoadingScreen from "@/components/LoadingScreen";
 export default function QuizPage() {
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleOptionClick = (value) => {
+  const handleOptionClick = (value, label) => {
     setScore(score + value);
+    setAnswers(prev => [...prev, { question: questions[step].text, answer: label }]);
     setStep(step + 1);
   };
 
   const handleSubmit = async (formData) => {
     setLoading(true);
+
+    // Save everything to sessionStorage so other pages can use it
+    sessionStorage.setItem("user_email", formData.email || "");
+    sessionStorage.setItem("user_phone", formData.phone || "");
+    sessionStorage.setItem("user_name", formData.name || "");
+    sessionStorage.setItem("quiz_answers", JSON.stringify(answers));
+    sessionStorage.setItem("quiz_score", String(score));
+
     try {
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, score }),
+        body: JSON.stringify({ ...formData, score, answers }),
       });
+
       const data = await res.json();
+
       if (data.success) {
-        const eventID = formData.email;
-        trackEvent("Lead", { score }, eventID);
+        trackEvent("Lead", { score }, formData.email);
         setTimeout(() => {
           window.location.href = data.redirectPath;
         }, 1000);

@@ -1,70 +1,84 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { trackEvent } from "../../lib/meta";
+
+// Builds a Calendly URL with quiz answers appended as context
+function buildCalendlyLink(baseLink, name, answers, score) {
+  try {
+    const url = new URL(baseLink);
+    if (name) url.searchParams.set("name", name);
+    if (score) url.searchParams.set("a1", `Quiz Score: ${score}`);
+    if (answers && answers.length > 0) {
+      answers.slice(0, 5).forEach((a, i) => {
+        url.searchParams.set(`a${i + 2}`, `${a.question}: ${a.answer}`);
+      });
+    }
+    return url.toString();
+  } catch {
+    return baseLink;
+  }
+}
 
 export default function ReadyToBuyPage() {
   const whatsappLink = "https://chat.whatsapp.com/EDuJoAlKEjtLFM008IN7cv";
+  const [userData, setUserData] = useState({ email: "", phone: "", name: "", answers: [], score: "" });
 
   const closers = [
-    {
-      name: "Oluchi",
-      role: "AI Income Strategist",
-      link: "https://calendly.com/oluchi-syncskills/ai-mastery-clarity-call",
-      initial: "O",
-    },
-    {
-      name: "Ijeoma",
-      role: "AI Career Coach",
-      link: "https://calendly.com/ijeoma-syncskills/ai-mastery-clarity-call",
-      initial: "I",
-    },
-    {
-      name: "Michael",
-      role: "AI Side Income Expert",
-      link: "https://calendly.com/mikechinenwork/ai-mastery-clarity-call-with-michael",
-      initial: "M",
-    },
+    { name: "Oluchi", role: "AI Income Strategist", link: "https://calendly.com/oluchi-syncskills/ai-mastery-clarity-call", initial: "O" },
+    { name: "Ijeoma", role: "AI Career Coach", link: "https://calendly.com/ijeoma-syncskills/ai-mastery-clarity-call", initial: "I" },
+    { name: "Michael", role: "AI Side Income Expert", link: "https://calendly.com/mikechinenwork/ai-mastery-clarity-call-with-michael", initial: "M" },
   ];
 
   const testimonials = [
     {
       image: "https://www.syncskills.com.au/media/Jaabir Jimoh.png",
       quote: "I was skeptical at first — but the clarity call removed every doubt I had. I got on the call unsure, and got off it ready to invest in myself. Best 15 minutes I've ever spent.",
-      name: "Jaabir J.",
-      role: "SyncSkills Member",
-      initial: "J",
+      name: "Jaabir J.", role: "SyncSkills Member", initial: "J",
     },
     {
       image: "https://www.syncskills.com.au/media/Psalms Adams-1.jpg",
       quote: "That confidence call changed everything for me. I even had the luxury of job offers to reject — a 240k no-interview income after mastering the masterclass.",
-      name: "Psalm A.",
-      role: "SyncSkills Member",
-      initial: "P",
+      name: "Psalm A.", role: "SyncSkills Member", initial: "P",
     },
     {
       image: "https://www.syncskills.com.au/media/Precious.jpeg",
       quote: "I almost didn't book the call. After it, I finally had a plan to replace my 9-5 income with AI — I now work 4 hours a day and spend the rest with loved ones.",
-      name: "Precious.",
-      role: "SyncSkills Member",
-      initial: "P",
+      name: "Precious.", role: "SyncSkills Member", initial: "P",
     },
   ];
 
+  // Load user data from sessionStorage on mount
+  useEffect(() => {
+    const email = sessionStorage.getItem("user_email") || "";
+    const phone = sessionStorage.getItem("user_phone") || "";
+    const name = sessionStorage.getItem("user_name") || "";
+    const score = sessionStorage.getItem("quiz_score") || "";
+    const raw = sessionStorage.getItem("quiz_answers");
+    const answers = raw ? JSON.parse(raw) : [];
+    setUserData({ email, phone, name, answers, score });
+  }, []);
+
+  // Scroll depth tracking
   useEffect(() => {
     let tracked25 = false, tracked50 = false, tracked75 = false, tracked100 = false;
     const handleScroll = () => {
       const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      if (pct >= 25 && !tracked25) { trackEvent("ScrollDepth", { depth: "25%" }); tracked25 = true; }
-      if (pct >= 50 && !tracked50) { trackEvent("ScrollDepth", { depth: "50%" }); tracked50 = true; }
-      if (pct >= 75 && !tracked75) { trackEvent("ScrollDepth", { depth: "75%" }); tracked75 = true; }
-      if (pct >= 100 && !tracked100) { trackEvent("ScrollDepth", { depth: "100%" }); tracked100 = true; }
+      if (pct >= 25 && !tracked25) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_25" }); tracked25 = true; }
+      if (pct >= 50 && !tracked50) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_50" }); tracked50 = true; }
+      if (pct >= 75 && !tracked75) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_75" }); tracked75 = true; }
+      if (pct >= 100 && !tracked100) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_100" }); tracked100 = true; }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [userData]);
 
-  const handleCalendlyClick = (closerName) => trackEvent("ReadyToBuy_CalendlyClick", { closer: closerName });
-  const handleWhatsappClick = () => trackEvent("ReadyToBuy_WhatsAppClick");
+  const handleCalendlyClick = (closerName) => {
+    trackEvent("Schedule", { email: userData.email, phone: userData.phone }, null, { content_name: `ReadyToBuy_${closerName}` });
+  };
+
+  const handleWhatsappClick = () => {
+    trackEvent("Contact", { email: userData.email, phone: userData.phone }, null, { content_name: "ReadyToBuy_WhatsApp" });
+  };
 
   return (
     <div className="min-h-screen bg-[#eae9f7] flex flex-col items-center px-6 py-16 text-center">
@@ -95,7 +109,7 @@ export default function ReadyToBuyPage() {
         {closers.map((closer, i) => (
           <a
             key={i}
-            href={closer.link}
+            href={buildCalendlyLink(closer.link, userData.name, userData.answers, userData.score)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleCalendlyClick(closer.name)}
@@ -152,16 +166,16 @@ export default function ReadyToBuyPage() {
         </div>
       </div>
 
-      {/* SECOND CTA (Calendly) */}
+      {/* SECOND CTA */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl mb-12">
         {closers.map((closer, i) => (
           <a
             key={i}
-            href={closer.link}
+            href={buildCalendlyLink(closer.link, userData.name, userData.answers, userData.score)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleCalendlyClick(closer.name)}
-            className="group inline-flex items-center justify-center gap-2 bg-[#ef4444] text-white font-extrabold text-sm px-6 py-3 rounded-xl hover:bg-[#1e0fb5] hover:scale-105 transition-all duration-300 shadow-md"
+            className="group inline-flex items-center justify-center gap-2 bg-[#ef4444] text-white font-extrabold text-sm px-6 py-3 rounded-xl hover:bg-[#c93333] hover:scale-105 transition-all duration-300 shadow-md"
           >
             Book with {closer.name}
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="group-hover:translate-x-1 transition-transform duration-300">

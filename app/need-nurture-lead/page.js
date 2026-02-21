@@ -1,42 +1,69 @@
 "use client";
+import { useEffect, useState } from "react";
 import { trackEvent } from "../../lib/meta";
 
-export default function NeedNurtureLead() {
-  const calendarLink = "https://calendly.com/oluchi-syncskills/ai-mastery-clarity-call";
-  const whatsappLink = "https://chat.whatsapp.com/EDuJoAlKEjtLFM008IN7cv";
+function buildCalendlyLink(baseLink, name, answers, score) {
+  try {
+    const url = new URL(baseLink);
+    if (name) url.searchParams.set("name", name);
+    if (score) url.searchParams.set("a1", `Quiz Score: ${score}`);
+    if (answers && answers.length > 0) {
+      answers.slice(0, 5).forEach((a, i) => {
+        url.searchParams.set(`a${i + 2}`, `${a.question}: ${a.answer}`);
+      });
+    }
+    return url.toString();
+  } catch {
+    return baseLink;
+  }
+}
 
-  const handleCalendarClick = () => {
-    trackEvent('NeedNurtureLead_CalendarClick');
-  };
+export default function NeedNurtureLead() {
+  const baseCalendarLink = "https://calendly.com/oluchi-syncskills/ai-mastery-clarity-call";
+  const whatsappLink = "https://chat.whatsapp.com/EDuJoAlKEjtLFM008IN7cv";
+  const [userData, setUserData] = useState({ email: "", phone: "", name: "", answers: [], score: "" });
 
   const testimonials = [
     {
       image: "https://www.syncskills.com.au/media/Chibuzor Kate-1.png",
       quote: "I had zero clarity on where to start with Anything Tech. After a session, I had a clear roadmap. Within few weeks I landed my first AI-powered role.",
-      name: "Kate C.",
-      role: "SyncSkills Member",
-      initial: "K",
+      name: "Kate C.", role: "SyncSkills Member", initial: "K",
     },
     {
       image: "https://www.syncskills.com.au/media/Pius Azeta 1.png",
       quote: "I thought AI was too technical for me. The clarity session completely changed that. Now I have a job that helps me have time freedom.",
-      name: "Pius Azeta.",
-      role: "SyncSkills Member",
-      initial: "P",
+      name: "Pius Azeta.", role: "SyncSkills Member", initial: "P",
     },
     {
       image: "https://www.syncskills.com.au/media/Olabisi Akomolafe.jpg",
       quote: "I wasn't sure if SyncSkills was for me. One honest 15-minute call gave me all the answers. Best decision I made this year.",
-      name: "Olabisi A.",
-      role: "SyncSkills Member",
-      initial: "O",
+      name: "Olabisi A.", role: "SyncSkills Member", initial: "O",
     },
   ];
+
+  useEffect(() => {
+    const email = sessionStorage.getItem("user_email") || "";
+    const phone = sessionStorage.getItem("user_phone") || "";
+    const name = sessionStorage.getItem("user_name") || "";
+    const score = sessionStorage.getItem("quiz_score") || "";
+    const raw = sessionStorage.getItem("quiz_answers");
+    const answers = raw ? JSON.parse(raw) : [];
+    setUserData({ email, phone, name, answers, score });
+  }, []);
+
+  const handleCalendarClick = () => {
+    trackEvent("Schedule", { email: userData.email, phone: userData.phone }, null, { content_name: "NeedNurture_CalendarClick" });
+  };
+
+  const handleWhatsappClick = () => {
+    trackEvent("Contact", { email: userData.email, phone: userData.phone }, null, { content_name: "NeedNurture_WhatsAppClick" });
+  };
+
+  const calendarLink = buildCalendlyLink(baseCalendarLink, userData.name, userData.answers, userData.score);
 
   return (
     <div className="min-h-screen bg-[#eae9f7] flex flex-col items-center px-6 py-16 text-center">
 
-      {/* ── HERO SECTION ── */}
       <p className="text-[#ef4444] text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-4">
         Free 15-Minute Clarity Session
       </p>
@@ -58,23 +85,19 @@ export default function NeedNurtureLead() {
           { icon: "🧭", label: "Which path fits your background" },
           { icon: "✅", label: "Whether this is right for you" },
         ].map((item, i) => (
-          <div
-            key={i}
-            className="bg-white border border-gray-200 rounded-xl px-3 py-4 flex flex-col items-center gap-2 shadow-sm"
-          >
+          <div key={i} className="bg-white border border-gray-200 rounded-xl px-3 py-4 flex flex-col items-center gap-2 shadow-sm">
             <span className="text-2xl">{item.icon}</span>
             <p className="text-gray-700 text-xs md:text-sm font-medium leading-snug">{item.label}</p>
           </div>
         ))}
       </div>
 
-      {/* ── BOOK BUTTON (primary CTA) ── */}
       <a
         href={calendarLink}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleCalendarClick}
-        className="group inline-flex items-center justify-center gap-3 bg-[#ef4444] text-white font-extrabold text-base md:text-lg px-10 py-4 rounded-xl hover:bg-[#1e0fb5] hover:scale-105 transition-all duration-300 w-full max-w-sm md:max-w-md mb-4 shadow-md"
+        className="group inline-flex items-center justify-center gap-3 bg-[#ef4444] text-white font-extrabold text-base md:text-lg px-10 py-4 rounded-xl hover:bg-[#c93333] hover:scale-105 transition-all duration-300 w-full max-w-sm md:max-w-md mb-4 shadow-md"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -92,7 +115,7 @@ export default function NeedNurtureLead() {
         15 minutes &nbsp;·&nbsp; Completely free &nbsp;·&nbsp; No obligation to buy
       </p>
 
-      {/* ── TESTIMONIALS ── */}
+      {/* TESTIMONIALS */}
       <div className="w-full max-w-5xl mb-6">
         <p className="text-[#2814de] text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-4">
           What others said after their call
@@ -100,33 +123,18 @@ export default function NeedNurtureLead() {
         <h2 className="text-black text-2xl md:text-3xl font-extrabold mb-10 leading-tight">
           Don't take our word for it.
         </h2>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t, i) => (
             <div key={i} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
-
-              {/* Top accent line */}
               <div className="h-1 w-full bg-[#2814de]" />
-
-              {/* Image */}
               <div className="w-full aspect-[4/3] relative overflow-hidden bg-gray-50">
-                <img
-                  src={t.image}
-                  alt={t.name}
-                  className="w-full h-full object-contain"
-                />
+                <img src={t.image} alt={t.name} className="w-full h-full object-contain" />
               </div>
-
-              {/* Quote */}
               <div className="px-5 py-5 flex flex-col flex-1">
                 <span className="text-[#2814de] text-4xl font-serif leading-none">"</span>
-                <p className="text-gray-700 text-sm italic leading-relaxed -mt-2 mb-4 flex-1">
-                  {t.quote}
-                </p>
+                <p className="text-gray-700 text-sm italic leading-relaxed -mt-2 mb-4 flex-1">{t.quote}</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#eae9f7] border border-[#2814de]/30 flex items-center justify-center text-[#2814de] text-xs font-bold shrink-0">
-                    {t.initial}
-                  </div>
+                  <div className="w-8 h-8 rounded-full bg-[#eae9f7] border border-[#2814de]/30 flex items-center justify-center text-[#2814de] text-xs font-bold shrink-0">{t.initial}</div>
                   <div className="text-left">
                     <p className="text-black text-xs font-bold">{t.name}</p>
                     <p className="text-gray-400 text-[10px] tracking-wide uppercase">{t.role}</p>
@@ -139,19 +147,17 @@ export default function NeedNurtureLead() {
                   </div>
                 </div>
               </div>
-
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── SECOND BOOK CTA ── */}
       <a
         href={calendarLink}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleCalendarClick}
-        className="group inline-flex items-center justify-center gap-3 bg-[#ef4444] text-white font-extrabold text-base md:text-lg px-10 py-4 rounded-xl hover:bg-[#1e0fb5] hover:scale-105 transition-all duration-300 w-full max-w-sm md:max-w-md mt-10 mb-4 shadow-md"
+        className="group inline-flex items-center justify-center gap-3 bg-[#ef4444] text-white font-extrabold text-base md:text-lg px-10 py-4 rounded-xl hover:bg-[#c93333] hover:scale-105 transition-all duration-300 w-full max-w-sm md:max-w-md mt-10 mb-4 shadow-md"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -169,7 +175,7 @@ export default function NeedNurtureLead() {
         Spots are limited &nbsp;·&nbsp; Book before they fill up
       </p>
 
-      {/* ── WHATSAPP SECTION ── */}
+      {/* WHATSAPP SECTION */}
       <div className="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl px-6 py-8 flex flex-col items-center shadow-sm">
         <p className="text-[#2814de] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
           Not ready to book yet?
@@ -180,11 +186,11 @@ export default function NeedNurtureLead() {
         <p className="text-gray-500 text-sm max-w-md mb-6">
           500+ members getting daily AI tips, income ideas, and support — completely free. Start here and book when you're ready.
         </p>
-
         <a
           href={whatsappLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={handleWhatsappClick}
           className="group inline-flex items-center justify-center gap-3 border-2 border-[#2814de] text-[#2814de] font-bold text-sm md:text-base px-8 py-3 rounded-xl hover:bg-[#2814de] hover:text-white transition-all duration-300 w-full max-w-xs"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -192,7 +198,6 @@ export default function NeedNurtureLead() {
           </svg>
           Join WhatsApp Community
         </a>
-
         <p className="text-gray-400 text-xs mt-4 tracking-wide">
           Free to join &nbsp;·&nbsp; No spam &nbsp;·&nbsp; Leave anytime
         </p>
