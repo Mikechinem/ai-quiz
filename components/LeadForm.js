@@ -32,7 +32,7 @@ export default function LeadForm({
     <div className="min-h-screen bg-[#eae9f7] flex flex-col justify-center items-center text-center p-4">
       <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8 w-full max-w-xl">
 
-        <p className="text-[#2814de] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+        <p className="text-[#ef4444] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
           Almost there
         </p>
         <h2 className="text-black text-2xl font-extrabold mb-6">
@@ -71,7 +71,7 @@ export default function LeadForm({
           <button
             type="submit"
             disabled={!consent}
-            className="w-full bg-[#2814de] text-white font-extrabold py-3 rounded-xl hover:bg-[#1e0fb5] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+            className="w-full bg-[#ef4444] text-white font-extrabold py-3 rounded-xl hover:bg-[#770e06] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
           >
             {buttonText}
           </button>

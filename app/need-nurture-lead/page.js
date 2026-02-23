@@ -69,14 +69,13 @@ export default function NeedNurtureLead() {
       </p>
 
       <h1 className="text-black text-3xl md:text-5xl font-extrabold leading-tight tracking-tight max-w-3xl mb-4">
-        🤔 Oops! Looks like you're not looking to get started{" "}
-        <span className="text-[#2814de]">right now...</span>
-      </h1>
+       Still figuring things out?{" "}
+      <span className="text-[#ef4444]">That's exactly what this call is for.</span>
+     </h1>
 
-      <p className="text-gray-500 text-sm md:text-lg max-w-2xl mb-6">
-        Book a free 15-minute clarity call. No pitch. No pressure. Just honest answers to your questions about AI, which path fits your background, and whether this is the right move for you right now.
+    <p className="text-gray-500 text-sm md:text-lg max-w-2xl mb-6">
+      Most people who changed their income with AI started with zero clarity. One honest 15-minute conversation is all it took. No pitch, no pressure — just real answers.
       </p>
-
       {/* What we'll cover */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl mb-12">
         {[

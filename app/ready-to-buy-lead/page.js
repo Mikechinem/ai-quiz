@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { trackEvent } from "../../lib/meta";
 
-// Builds a Calendly URL with quiz answers appended as context
 function buildCalendlyLink(baseLink, name, answers, score) {
   try {
     const url = new URL(baseLink);
@@ -58,9 +57,12 @@ export default function ReadyToBuyPage() {
     setUserData({ email, phone, name, answers, score });
   }, []);
 
-  // Scroll depth tracking
+  // Scroll depth — only fires if we have user data to attach
   useEffect(() => {
+    if (!userData.email) return; // ← guard: skip if no user data yet
+
     let tracked25 = false, tracked50 = false, tracked75 = false, tracked100 = false;
+
     const handleScroll = () => {
       const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
       if (pct >= 25 && !tracked25) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_25" }); tracked25 = true; }
@@ -68,15 +70,18 @@ export default function ReadyToBuyPage() {
       if (pct >= 75 && !tracked75) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_75" }); tracked75 = true; }
       if (pct >= 100 && !tracked100) { trackEvent("ViewContent", { email: userData.email, phone: userData.phone }, null, { content_name: "ScrollDepth_100" }); tracked100 = true; }
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [userData]);
+  }, [userData]); // ← re-runs when userData loads, so scroll tracking starts after email is available
 
   const handleCalendlyClick = (closerName) => {
+    if (!userData.email) return; // guard
     trackEvent("Schedule", { email: userData.email, phone: userData.phone }, null, { content_name: `ReadyToBuy_${closerName}` });
   };
 
   const handleWhatsappClick = () => {
+    if (!userData.email) return; // guard
     trackEvent("Contact", { email: userData.email, phone: userData.phone }, null, { content_name: "ReadyToBuy_WhatsApp" });
   };
 
@@ -84,14 +89,11 @@ export default function ReadyToBuyPage() {
     <div className="min-h-screen bg-[#eae9f7] flex flex-col items-center px-6 py-16 text-center">
 
       {/* HERO SECTION */}
-      <p className="text-[#ef4444] text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-4">
-        Free 15-Minute Clarity Session
-      </p>
-
+      
       <h1 className="text-black text-3xl md:text-5xl font-extrabold leading-tight tracking-tight max-w-3xl mb-4">
-        You rock 🔥 <br/>100+ steps ahead of most people —{" "}
-        <span className="text-[#2814de]">let's unlock your dream life</span>
-      </h1>
+  You've done the hard part.{" "}
+  <span className="text-[#ef4444]">Now let's build the income to match your ambition.</span>
+</h1>
 
       <p className="text-gray-500 text-sm md:text-lg max-w-2xl mb-10">
         Book a free 15-minute clarity call. No pitch. No pressure. Just honest answers to your questions about AI, which path fits your background, and whether this is the right move for you right now.

@@ -12,9 +12,9 @@ export default function LoadingScreen({ score }) {
           Your score: <span className="font-extrabold">{score} / 24</span>
         </p>
         <div className="flex justify-center space-x-2 mb-6">
-          <span className="w-4 h-4 rounded-full bg-[#2814de] animate-bounce"></span>
-          <span className="w-4 h-4 rounded-full bg-[#2814de] animate-bounce animation-delay-200"></span>
-          <span className="w-4 h-4 rounded-full bg-[#2814de] animate-bounce animation-delay-400"></span>
+          <span className="w-4 h-4 rounded-full bg-[#ef4444] animate-bounce"></span>
+          <span className="w-4 h-4 rounded-full bg-[#ef4444] animate-bounce animation-delay-200"></span>
+          <span className="w-4 h-4 rounded-full bg-[#ef4444] animate-bounce animation-delay-400"></span>
         </div>
         <p className="text-gray-400 text-sm">
           Analyzing your answers to match you with the best AI side hustle path…

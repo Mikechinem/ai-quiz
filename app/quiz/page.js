@@ -1,6 +1,6 @@
 "use client";
 
-import { trackEvent } from "@/lib/metaPixel";
+import { trackEvent } from "@/lib/meta";
 import { useState } from "react";
 import { questions } from "@/data/questions";
 import QuestionCard from "@/components/QuestionCard";
@@ -40,7 +40,7 @@ export default function QuizPage() {
       const data = await res.json();
 
       if (data.success) {
-        trackEvent("Lead", { score }, formData.email);
+        trackEvent("Lead", { email: formData.email, phone: formData.phone }, formData.email);
         setTimeout(() => {
           window.location.href = data.redirectPath;
         }, 1000);

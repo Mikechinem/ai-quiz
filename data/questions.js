@@ -4,9 +4,9 @@ export const questions = [
     text: "1. Your current situation?",
     options: [
       { label: "Employed full-time", score: 3 },
-      { label: "Employed part-time", score: 2 },
+      { label: "Employed part-time", score: 1 },
       { label: "Self-employed", score: 1 },
-      { label: "Between jobs", score: 0 },
+      { label: "Between jobs", score: 1 },
     ],
   },
   {
@@ -21,19 +21,19 @@ export const questions = [
   {
     text: "3. Why do you want extra income?",
     options: [
-      { label: "Reduce pressure", score: 3 },
+      { label: "Reduce pressure", score: 2 },
       { label: "Support family", score: 2 },
       { label: "Invest/save more", score: 1 },
-      { label: "Gain freedom", score: 0 },
+      { label: "Gain freedom", score: 1 },
     ],
   },
   {
     text: "4. Have you tried side income before?",
     options: [
-      { label: "Yes, worked", score: 3 },
+      { label: "Yes, worked", score: 2 },
       { label: "Yes, failed", score: 2 },
       { label: "Tried but inconsistent", score: 1 },
-      { label: "Never tried", score: 0 },
+      { label: "Never tried", score: 1 },
     ],
   },
   {
